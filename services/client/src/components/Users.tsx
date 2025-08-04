@@ -16,7 +16,7 @@ const Users = () => {
     useEffect( () => {
         setUsers([{id: 1, username: "johndoe", email: "johndoe@example.com", created_date: "2024-08-1"},
                   {id: 2, username: "janedoe", email: "janedoe@exampple.com", created_date: "2024-08-02"},
-                  {id: 3, username: "megan-the-hot-stuff", email: "nice-zuccini@exampple.com", created_date: "2024-08-03"}])
+                  {id: 3, username: "megan-the-hot-stuff", email: "nice-zucchini@exampple.com", created_date: "2024-08-03"}])
     })
     
     return (
