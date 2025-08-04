@@ -1,14 +1,14 @@
-version: '3.8'
+# version: '3.8'
 
 services:
 
   api:
     build:
-      context: .
+      context: ./services/users  # updated
       dockerfile: Dockerfile
-    entrypoint: ['/usr/src/app/entrypoint.sh']
+    command: ["sh", "-c", "while ! nc -z api-db 5432; do sleep 0.1; done; echo 'PostgreSQL started'; python manage.py run -h 0.0.0.0"]
     volumes:
-      - '.:/usr/src/app'
+      - './services/users:/usr/src/app'  # updated
     ports:
       - 5004:5000
     environment:
@@ -22,7 +22,7 @@ services:
 
   api-db:
     build:
-      context: ./src/db
+      context: ./services/users/src/db  # updated
       dockerfile: Dockerfile
     expose:
       - 5432
