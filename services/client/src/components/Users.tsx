@@ -1,6 +1,5 @@
 
 import { Heading, Box, Divider, Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
 
 interface User {
     created_date: string;
@@ -9,15 +8,13 @@ interface User {
     username: string;
 }
 
-const Users = () => {
+interface UsersProps {
+    users: User[];
+}
 
-    const [users, setUsers] = useState<User[]>([]);
+const Users = ({ users }: UsersProps) => {
 
-    useEffect( () => {
-        setUsers([{id: 1, username: "johndoe", email: "johndoe@example.com", created_date: "2024-08-1"},
-                  {id: 2, username: "janedoe", email: "janedoe@exampple.com", created_date: "2024-08-02"},
-                  {id: 3, username: "megan-the-hot-stuff", email: "nice-zucchini@exampple.com", created_date: "2024-08-03"}])
-    })
+    //   ,{id: 3, username: "megan-the-hot-stuff", email: "nice-zucchini@exampple.com", created_date: "2024-08-03"}
     
     return (
     <Box p={4} maxW="1200px" mx="auto">

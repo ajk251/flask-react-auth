@@ -1,9 +1,10 @@
 
 
-import {useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import axios from "axios";
 import Users from "./components/Users";
+import AddUser from "./components/AddUser";
 
 
 interface User {
@@ -32,8 +33,13 @@ const App = () => {
     fetchUsers();
   }, [])
 
+   const addUserToList = (newUser: User) => {
+    setUsers((prevUsers) => [...prevUsers, newUser]);
+  };
+
   return (<ChakraProvider>
-            <Users />
+            <AddUser addUserToList={addUserToList}/>
+            <Users users={users} />
           </ChakraProvider>)
   }
 
