@@ -13,16 +13,10 @@ from src.api.users.crud import (  # isort:skip
 users_namespace = Namespace("users")
 
 
-user = users_namespace.model(
-    "User",
-    {
-        "id": fields.Integer(readOnly=True),
-        "username": fields.String(required=True),
-        "email": fields.String(required=True),
-        "created_date": fields.DateTime,
-    },
-)
-
+user = users_namespace.model( "User",  { "id": fields.Integer(readOnly=True),
+                                         "username": fields.String(required=True),
+                                         "email": fields.String(required=True),
+                                         "created_date": fields.DateTime, },)
 
 class UsersList(Resource):
     @users_namespace.marshal_with(user, as_list=True)
@@ -52,6 +46,7 @@ class UsersList(Resource):
 
 
 class Users(Resource):
+
     @users_namespace.marshal_with(user)
     @users_namespace.response(200, "Success")
     @users_namespace.response(404, "User <user_id> does not exist")

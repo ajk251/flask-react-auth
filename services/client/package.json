@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "prettier:check": "prettier --check 'src/**/*.{js,jsx,json,ts,tsx}'",
+    "prettier:write": "prettier --write 'src/**/*.{js,jsx,json,ts,tsx}'"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
@@ -20,7 +22,8 @@
     "framer-motion": "^11.3.30",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.1"
+    "react-router-dom": "^6.26.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.8",
@@ -33,9 +36,11 @@
     "@vitest/coverage-v8": "^2.1.9",
     "@vitest/ui": "^2.1.9",
     "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
     "jsdom": "^24.1.1",
+    "prettier": "^3.3.3",
     "typescript": "^5.2.2",
     "vite": "^5.3.4",
     "vitest": "^2.1.9"
