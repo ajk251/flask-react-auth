@@ -1,4 +1,4 @@
-from src import db
+from src import bcrypt, db
 from src.api.users.models import User
 
 
@@ -14,16 +14,17 @@ def get_user_by_email(email):
     return User.query.filter_by(email=email).first()
 
 
-def add_user(username, email):
-    user = User(username=username, email=email)
+def add_user(username, email, password):
+    user = User(username=username, email=email, password=password)
     db.session.add(user)
     db.session.commit()
     return user
 
 
-def update_user(user, username, email):
+def update_user(user, username, email, password):
     user.username = username
     user.email = email
+    user.password = bcrypt.generate_password_hash(password).decode()
     db.session.commit()
     return user
 
