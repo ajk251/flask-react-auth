@@ -34,7 +34,7 @@ class User(db.Model):
         else: 
             seconds = current_app.config.get('REFRESH_TOKEN_EXPIRATION')
 
-        payload = {'exp': datetime.datetime.now() + datetime.timedelta(days=0, seconds=5), 
+        payload = {'exp': datetime.datetime.now() + datetime.timedelta(days=0, seconds=seconds), 
                    'iat': datetime.datetime.utcnow(),
                    'sub': user_id}
         
@@ -48,6 +48,7 @@ class User(db.Model):
 
 
 if os.getenv("FLASK_ENV") == "development":
+
     from src import admin
     from src.api.users.admin import UsersAdminView
 

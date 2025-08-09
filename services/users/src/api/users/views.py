@@ -23,10 +23,7 @@ user = users_namespace.model(
     },
 )
 
-user_post = users_namespace.inherit(
-    "User post", user, {"password": fields.String(required=True)}
-)
-
+user_post = users_namespace.inherit("User post", user, {"password": fields.String(required=True)})
 
 class UsersList(Resource):
     @users_namespace.marshal_with(user, as_list=True)
