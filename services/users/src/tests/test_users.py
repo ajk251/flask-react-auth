@@ -145,6 +145,7 @@ def test_remove_user(test_app, test_database, add_user):
 
 
 def test_remove_user_incorrect_id(test_app, test_database):
+    
     client = test_app.test_client()
     resp = client.delete("/users/999")
     data = json.loads(resp.data.decode())
@@ -154,6 +155,7 @@ def test_remove_user_incorrect_id(test_app, test_database):
 
 
 def test_update_user(test_app, test_database, add_user):
+
     user = add_user("user-to-be-updated", "update-me@testdriven.io", "greaterthaneight")
     client = test_app.test_client()
     resp_one = client.put(
@@ -193,9 +195,8 @@ def test_update_user(test_app, test_database, add_user):
         ],
     ],
 )
-def test_update_user_invalid(
-    test_app, test_database, user_id, payload, status_code, message
-):
+def test_update_user_invalid(test_app, test_database, user_id, payload, status_code, message):
+
     client = test_app.test_client()
     resp = client.put(
         f"/users/{user_id}",
@@ -209,6 +210,7 @@ def test_update_user_invalid(
 
 
 def test_update_user_duplicate_email(test_app, test_database, add_user):
+
     add_user("hajek", "rob@hajek.org", "greaterthaneight")
     user = add_user("rob", "rob@notreal.com", "greaterthaneight")
 
@@ -228,3 +230,4 @@ def test_update_user_duplicate_email(test_app, test_database, add_user):
 
     assert resp.status_code == 400
     assert "Sorry. That email already exists." in data["message"]
+

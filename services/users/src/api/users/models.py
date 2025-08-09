@@ -1,4 +1,8 @@
+
+import datetime
 import os
+
+import jwt
 
 from flask import current_app
 from sqlalchemy.sql import func
@@ -7,6 +11,7 @@ from src import bcrypt, db
 
 
 class User(db.Model):
+
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -17,11 +22,29 @@ class User(db.Model):
     created_date = db.Column(db.DateTime, default=func.now(), nullable=False)
 
     def __init__(self, username, email, password):
+
         self.username = username
         self.email = email
-        self.password = bcrypt.generate_password_hash(
-            password, current_app.config.get("BCRYPT_LOG_ROUNDS")
-        ).decode()
+        self.password = bcrypt.generate_password_hash(password, current_app.config.get("BCRYPT_LOG_ROUNDS")).decode()
+
+    def encode_token(self, user_id, token_type):
+
+        if token_type == "access":
+            seconds = current_app.config.get('ACCESS_TOKEN_EXPIRATION')
+        else: 
+            seconds = current_app.config.get('REFRESH_TOKEN_EXPIRATION')
+
+        payload = {'exp': datetime.datetime.now() + datetime.timedelta(days=0, seconds=5), 
+                   'iat': datetime.datetime.utcnow(),
+                   'sub': user_id}
+        
+        return jwt.encode(payload, current_app.config.get('SECRET_KEY'), algorithm='HS256')
+    
+    def decode_token(token):
+
+        payload = jwt.decode(token, current_app.config.get("SECRET_KEY"), algorithms="HS256")
+
+        return payload['sub']
 
 
 if os.getenv("FLASK_ENV") == "development":
