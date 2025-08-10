@@ -104,7 +104,6 @@ class Refresh(Resource):
             auth_namespace.abort(401, "Invalid token. Please log in again.")
 
 
-
 class Status(Resource):
 
     @auth_namespace.marshal_with(user)

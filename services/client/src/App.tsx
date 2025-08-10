@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
+import { Routes, Route } from "react-router-dom";
 import axios from "axios";
 import Users from "./components/Users";
+import About from './components/About';
 import AddUser from "./components/AddUser";
 
 
@@ -37,10 +39,24 @@ const App = () => {
     setUsers((prevUsers) => [...prevUsers, newUser]);
   };
 
-  return (<ChakraProvider>
-            <AddUser addUserToList={addUserToList}/>
+  // return (<ChakraProvider>
+  //           <AddUser addUserToList={addUserToList}/>
+  //           <Users users={users} />
+  //           <About />
+  //         </ChakraProvider>)
+  return (
+    <ChakraProvider>
+      <Routes>
+        <Route path="/" element={
+          <>
+            <AddUser addUserToList={addUserToList} />
             <Users users={users} />
-          </ChakraProvider>)
+          </>
+        } />
+        <Route path="/about" element={<About />} />
+      </Routes>
+    </ChakraProvider>
+);
   }
 
 export default App
