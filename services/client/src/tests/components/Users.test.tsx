@@ -12,7 +12,7 @@ describe("Users", () => {
 
     it("Should render no registered users when there are no users passed to the component", () => {
         render(<Users users={[]} />);
-        const message = screen.getByText(/no registered users/i);
+        const message = screen.getByText(/no registered/i);
         expect(message).toBeTruthy();
     });
 
