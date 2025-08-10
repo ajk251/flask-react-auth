@@ -63,6 +63,8 @@ def test_registered_user_login(test_app, test_database, add_user):
                        content_type='application/json')
     data = json.loads(resp.data.decode())
 
+    print(data)
+
     assert resp.status_code == 200
     assert resp.content_type == 'application/json'
     assert data['access_token']
