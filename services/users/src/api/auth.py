@@ -1,9 +1,12 @@
 
-from flask import request
+import jwt
+
+from flask import request, current_app
 from flask_restx import Namespace, Resource, fields
 
 from src import bcrypt
 from src.api.users.crud import get_user_by_email, get_user_by_id, add_user
+from src.api.users.models import User
 
 auth_namespace = Namespace("auth")
 
@@ -12,7 +15,12 @@ full_user = auth_namespace.clone("Full User", user, {"password": fields.String(r
 
 login = auth_namespace.model("Login user", {"email": fields.String(required=True), "password": fields.String(required=True)})
 refresh = auth_namespace.model("Refresh", {"refresh_token": fields.String(required=True)})
-tokens = auth_namespace.model("Access and refresh_tokens", refresh, {"access_token": fields.String(required=True)})
+# tokens = auth_namespace.model("Access and refresh_tokens", refresh, {"access_token": fields.String(required=True)})
+tokens = auth_namespace.model("Access and refresh_tokens", {"access_token": fields.String(required=True),
+                                                            "refresh_token": fields.String(required=True)})
+
+parser = auth_namespace.parser()
+parser.add_argument("Authorization", location="headers")
 
 
 class Register(Resource):
@@ -66,14 +74,65 @@ class Login(Resource):
 
 class Refresh(Resource):
 
+    @auth_namespace.marshal_with(tokens)
+    @auth_namespace.expect(refresh, validate=True)
+    @auth_namespace.response(200, "Success")
+    @auth_namespace.response(401, "Invalid token")
     def post(self):
-        pass
+        
+        post_data = request.get_json()
+        refresh_token = post_data.get('refresh_token')
+        response_object = {}
+
+        try:
+            resp = User.decode_token(refresh_token)
+            user = get_user_by_id(resp)
+
+            if not user:
+                auth_namespace.abort(401, "Invalid token")
+
+            access_token = user.encode_token(user.id, "access")
+            refresh_token = user.encode_token(user.id, "refresh")
+
+            response_object = {'access_token': access_token, 'refresh_token': refresh_token}
+
+            return response_object, 200
+        except jwt.ExpiredSignatureError:
+            auth_namespace.abort(401, "Signature expired. Please log in again.")
+            return "Signature expired. Please log in again."
+        except jwt.InvalidTokenError:
+            auth_namespace.abort(401, "Invalid token. Please log in again.")
+
 
 
 class Status(Resource):
 
+    @auth_namespace.marshal_with(user)
+    @auth_namespace.response(200, "Success")
+    @auth_namespace.response(401, "Invalid token")
+    @auth_namespace.expect(parser)
     def get(self):
-        pass
+        
+        auth_header = request.headers.get("Authorization")
+
+        if auth_header:
+           
+            try:
+                access_token = auth_header.split(" ")[1]
+                resp = User.decode_token(access_token)
+                user = get_user_by_id(resp)
+
+                if not user:
+                    auth_namespace.abort(401, "Invalid token")
+
+                return user, 200
+            except jwt.ExpiredSignatureError:
+                auth_namespace.abort(401, "Signature expired. Please log in again.")
+                return "Signature expired. Please log in again."
+            except jwt.InvalidTokenError:
+                auth_namespace.abort(401, "Invalid token. Please log in again.")
+        else:
+            auth_namespace.abort(403, 'Token required')
 
 
 auth_namespace.add_resource(Register, "/register")
